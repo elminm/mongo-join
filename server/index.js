@@ -7,11 +7,13 @@ const { countryRoutes } = require("./routes/countryRoutes");
 const { writerRoutes } = require("./routes/writerRoutes");
 
 require("dotenv").config();
+
 const fileUpload = require("express-fileupload");
 
 app.use(express.urlencoded({ extended: false }));
 app.use(fileUpload());
 app.use(cors());
+app.use(express.static("imgs"));
 
 db.connect();
 

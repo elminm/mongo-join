@@ -19,8 +19,9 @@ const bookController = {
     let id = req.params.id;
     Book.findById(id)
       .then((data) => {
-        if (data) res.json(data);
-        else
+        if (data) {
+          res.json(data);
+        } else
           res.status(404).json({
             msg: "Not Found",
           });
@@ -31,8 +32,7 @@ const bookController = {
   },
   addBook: (req, res) => {
     let file = req.files.imagePath;
-
-    let path = __dirname + "/.." + "/imgs/" + uuidv4() + ".jpeg";
+    let path = uuidv4() + ".jpeg";
     console.log(path);
     file.mv(path, function (err) {
       if (!err) {
@@ -50,7 +50,6 @@ const bookController = {
       updatedAt: new Date(),
     });
     book.save();
-    res.json(book);
   },
   deleteBookById: (req, res) => {
     Book.findByIdAndRemove(req.params.id)
