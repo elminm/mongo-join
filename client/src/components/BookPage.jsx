@@ -10,8 +10,8 @@ export default function BookPage({ getData }) {
     description: "",
     imagePath: "",
     publishDate: "",
-    country: "",
-    writer: "",
+    country: null,
+    writer: null,
   });
 
   const getAll = () => {
@@ -41,7 +41,7 @@ export default function BookPage({ getData }) {
       [name]: value,
     }));
   };
-
+  const enabled = data.country && data.writer && data.imagePath;
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -52,9 +52,13 @@ export default function BookPage({ getData }) {
     formData.append("writer", data.writer);
     formData.append("imagePath", e.target.elements.imagePath.files[0]);
 
-    axios
-      .post("http://localhost:8000/book/api", formData)
-      .then(() => getData());
+    if (enabled) {
+      axios
+        .post("http://localhost:8000/book/api", formData)
+        .then(() => getData());
+    } else {
+      alert("fill boxes");
+    }
   };
 
   return (
@@ -79,6 +83,9 @@ export default function BookPage({ getData }) {
         <div>
           <label htmlFor="writer">Author</label>
           <select name="writer" onChange={handleSelectChange}>
+            <option disabled selected>
+              choose one
+            </option>
             {writers.map((writer) => (
               <option value={writer._id} key={writer._id}>
                 {writer.firstName}
@@ -89,6 +96,9 @@ export default function BookPage({ getData }) {
         <div>
           <label htmlFor="writer">Country</label>
           <select name="country" onChange={handleSelectChange}>
+            <option disabled selected>
+              choose one
+            </option>
             {countries.map((country) => (
               <option value={country._id} key={country._id}>
                 {country.name}
@@ -96,7 +106,9 @@ export default function BookPage({ getData }) {
             ))}
           </select>
         </div>
-        <button type="submit">save</button>
+        <button disabled={!enabled} type="submit">
+          save
+        </button>
       </form>
     </>
   );

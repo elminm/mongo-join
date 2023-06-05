@@ -12,6 +12,11 @@ export default function App() {
   useEffect(() => {
     getData();
   }, []);
+  const removeBook = (id) => {
+    axios.delete("http://localhost:8000/book/api/" + id).then(() => {
+      getData();
+    });
+  };
   return (
     <div className="app">
       <table style={{ width: "70%" }}>
@@ -21,6 +26,7 @@ export default function App() {
             <th>description</th>
             <th>publishDate</th>
             <th>picture</th>
+            <th>Remove</th>
           </tr>
         </thead>
         <tbody>
@@ -35,6 +41,9 @@ export default function App() {
                   alt="asdasd"
                   style={{ objectFit: "cover", width: "100%", height: "100%" }}
                 />
+              </td>
+              <td>
+                <button onClick={() => removeBook(book._id)}>Delete</button>
               </td>
             </tr>
           ))}
