@@ -33,7 +33,6 @@ const bookController = {
   addBook: (req, res) => {
     let file = req.files.imagePath;
     let path = uuidv4() + ".jpeg";
-    console.log(path);
     file.mv("imgs/" + path, function (err) {
       if (!err) {
         res.send("Success!!");

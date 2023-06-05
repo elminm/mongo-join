@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function BookPage() {
+export default function BookPage({ getData }) {
   const [countries, setCountries] = useState([]);
   const [writers, setWriters] = useState([]);
   const [data, setData] = useState({
@@ -21,7 +22,6 @@ export default function BookPage() {
       setWriters(data);
     });
   };
-
   useEffect(() => {
     getAll();
   }, []);
@@ -52,9 +52,9 @@ export default function BookPage() {
     formData.append("writer", data.writer);
     formData.append("imagePath", e.target.elements.imagePath.files[0]);
 
-    axios.post("http://localhost:8000/book/api", formData).then(() => {
-      getAll();
-    });
+    axios
+      .post("http://localhost:8000/book/api", formData)
+      .then(() => getData());
   };
 
   return (
@@ -98,34 +98,6 @@ export default function BookPage() {
         </div>
         <button type="submit">save</button>
       </form>
-      <style>
-        {`
-          .book-form {
-            display: grid;
-            gap: 10px;
-            max-width: 400px;
-            margin: 0 auto;
-          }
-
-          .book-form div {
-            display: grid;
-            gap: 5px;
-          }
-
-          .book-form label {
-            font-weight: bold;
-          }
-
-          .book-form input,
-          .book-form select {
-            padding: 5px;
-          }
-
-          .book-form input[type="date"] {
-            width: 100%;
-          }
-        `}
-      </style>
     </>
   );
 }

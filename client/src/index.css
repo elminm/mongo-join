@@ -2,3 +2,47 @@ body {
   margin: 0;
   padding: 0;
 }
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+.app {
+  display: flex;
+  justify-content: space-between;
+}
+.book-form {
+  display: grid;
+  gap: 10px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.book-form div {
+  display: grid;
+  gap: 5px;
+}
+
+.book-form label {
+  font-weight: bold;
+}
+
+.book-form input,
+.book-form select {
+  padding: 5px;
+}
+
+.book-form input[type="date"] {
+  width: 100%;
+}

@@ -4,20 +4,23 @@ import axios from "axios";
 
 export default function App() {
   const [books, setbooks] = useState([]);
-  useEffect(() => {
+  const getData = () => {
     axios.get("http://localhost:8000/book/api").then((res) => {
       setbooks(res.data);
     });
+  };
+  useEffect(() => {
+    getData();
   }, []);
   return (
-    <div>
-      <table>
+    <div className="app">
+      <table style={{ width: "70%" }}>
         <thead>
           <tr>
             <th>name</th>
             <th>description</th>
             <th>publishDate</th>
-            <th></th>
+            <th>picture</th>
           </tr>
         </thead>
         <tbody>
@@ -26,14 +29,18 @@ export default function App() {
               <td> {book.name}</td>
               <td> {book.description}</td>
               <td> {book.publishDate}</td>
-              <td>
-                <img src={book.imagePath} alt="asdasd" />
+              <td style={{ width: "100px", height: "100px" }}>
+                <img
+                  src={book.imagePath}
+                  alt="asdasd"
+                  style={{ objectFit: "cover", width: "100%", height: "100%" }}
+                />
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <BookPage />
+      <BookPage getData={getData} />
     </div>
   );
 }
