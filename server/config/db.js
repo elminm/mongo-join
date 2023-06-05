@@ -1,4 +1,5 @@
 const { default: mongoose } = require("mongoose");
+mongoose.set("toJSON", { getters: true });
 
 const db = {
   connect: async () => {
