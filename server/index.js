@@ -5,15 +5,14 @@ const { db } = require("./config/db");
 const { bookRoutes } = require("./routes/bookRoutes");
 const { countryRoutes } = require("./routes/countryRoutes");
 const { writerRoutes } = require("./routes/writerRoutes");
-
+const path = require("path");
 require("dotenv").config();
 
 const fileUpload = require("express-fileupload");
-
 app.use(express.urlencoded({ extended: false }));
 app.use(fileUpload());
 app.use(cors());
-app.use(express.static("imgs"));
+app.use(express.static(path.join(__dirname, "imgs")));
 
 db.connect();
 

@@ -1,67 +1,80 @@
 const { Book } = require("../models/bookSchema");
 const { v4: uuidv4 } = require("uuid");
+const fs = require("fs");
+const path = require("path");
 
 const bookController = {
-  getAllBook: (req, res) => {
-    Book.find()
-      .populate({
+  getAllBook: async (req, res) => {
+    try {
+      const data = await Book.find().populate({
         path: "writer",
         populate: { path: "country" },
-      })
-      .then((data) => {
+      });
+      res.json(data);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+  getBookById: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const data = await Book.findById(id);
+      if (data) {
         res.json(data);
-      })
-      .catch((err) => {
-        res.status(500).json(err);
-      });
-  },
-  getBookById: (req, res) => {
-    let id = req.params.id;
-    Book.findById(id)
-      .then((data) => {
-        if (data) {
-          res.json(data);
-        } else
-          res.status(404).json({
-            msg: "Not Found",
-          });
-      })
-      .catch((err) => {
-        res.status(500).json(err);
-      });
-  },
-  addBook: (req, res) => {
-    let file = req.files.imagePath;
-    let path = uuidv4() + ".jpeg";
-    file.mv("imgs/" + path, function (err) {
-      if (!err) {
-        res.send("Success!!");
       } else {
-        res.status(500).json(err);
-      }
-    });
-    let book = new Book({
-      name: req.body.name,
-      description: req.body.description,
-      publishDate: req.body.publishDate,
-      imagePath: path,
-      writer: req.body.writer,
-      updatedAt: new Date(),
-    });
-    book.save();
-  },
-  deleteBookById: (req, res) => {
-    Book.findByIdAndRemove(req.params.id)
-      .then(() => {
-        res.json({
-          msg: "Deleted Succesfully",
+        res.status(404).json({
+          msg: "Not Found",
         });
-      })
-      .catch((err) => {
-        res.status(500).json(err);
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+  addBook: async (req, res) => {
+    try {
+      const file = req.files.imagePath;
+      const namePic = uuidv4() + ".jpeg";
+      const path = __dirname + "/.." + "/imgs/" + namePic;
+      await file.mv(path);
+
+      const book = new Book({
+        name: req.body.name || "",
+        description: req.body.description || "",
+        publishDate: req.body.publishDate || "",
+        imagePath: process.env.BASE_URI + namePic,
+        writer: req.body.writer || "",
+        updatedAt: new Date(),
       });
+
+      await book.save();
+      res.send("Success!!");
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+
+  deleteBookById: async (req, res) => {
+    try {
+      const data = await Book.findByIdAndRemove(req.params.id);
+      let idx = data.imagePath.lastIndexOf("/");
+      let imgName = data.imagePath.substring(idx);
+      const url = __dirname + "/.." + "/imgs" + imgName;
+      console.log("DIRECTION", url);
+      fs.unlink(url, (err) => {
+        if (!err) {
+          res.json({
+            msg: "Deleted Successfully",
+          });
+        } else {
+          res.status(500).json({ msg: "Not Found" });
+        }
+      });
+    } catch (err) {
+      res.status(500).json(err);
+    }
   },
 };
+
 module.exports = {
   bookController,
 };

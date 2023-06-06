@@ -14,11 +14,11 @@ export default function BookPage({ getData }) {
     writer: null,
   });
 
-  const getAll = () => {
-    axios.get("http://localhost:8000/country/api").then(({ data }) => {
+  const getAll = async () => {
+    await axios.get("http://localhost:8000/country/api").then(({ data }) => {
       setCountries(data);
     });
-    axios.get("http://localhost:8000/writer/api").then(({ data }) => {
+    await axios.get("http://localhost:8000/writer/api").then(({ data }) => {
       setWriters(data);
     });
   };
@@ -42,6 +42,7 @@ export default function BookPage({ getData }) {
     }));
   };
   const enabled = data.country && data.writer && data.imagePath;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -51,7 +52,6 @@ export default function BookPage({ getData }) {
     formData.append("country", data.country);
     formData.append("writer", data.writer);
     formData.append("imagePath", e.target.elements.imagePath.files[0]);
-
     if (enabled) {
       axios
         .post("http://localhost:8000/book/api", formData)

@@ -1,3 +1,1 @@
 pass : uVC1S2C44r7RIuvE
-mongodb+srv://Elminm:uVC1S2C44r7RIuvE@cluster0.kuxordu.mongodb.net/
-

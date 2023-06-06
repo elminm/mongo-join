@@ -4,8 +4,8 @@ import axios from "axios";
 
 export default function App() {
   const [books, setbooks] = useState([]);
-  const getData = () => {
-    axios.get("http://localhost:8000/book/api").then((res) => {
+  const getData = async () => {
+    await axios.get("http://localhost:8000/book/api").then((res) => {
       setbooks(res.data);
     });
   };
